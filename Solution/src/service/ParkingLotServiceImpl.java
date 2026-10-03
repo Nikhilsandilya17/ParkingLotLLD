@@ -2,6 +2,7 @@ package service;
 
 import enums.SpotType;
 import enums.VehicleType;
+import exception.ParkingLotFullException;
 import factory.ParkingSpotFactory;
 import factory.VehicleFactory;
 import models.*;
