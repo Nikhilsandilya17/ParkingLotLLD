@@ -17,4 +17,6 @@ public interface ParkingLotService {
     ParkingTicket parkVehicle(Vehicle vehicle, ParkingLot parkingLot);
 
     void getAvailabilityCountByType(ParkingLot parkingLot);
+
+    void unparkVehicle(String ticketId);
 }

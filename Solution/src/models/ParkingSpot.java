@@ -49,10 +49,8 @@ public class ParkingSpot {
         return true;
     }
 
-    public Vehicle removeVehicle() {
-        Vehicle vehicle = parkedVehicle;
+    public void removeVehicle() {
         parkedVehicle = null;
         isOccupied.set(false);
-        return vehicle;
     }
 }

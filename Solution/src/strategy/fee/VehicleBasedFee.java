@@ -14,6 +14,10 @@ public class VehicleBasedFee implements FeeStrategy {
             VehicleType.TRUCK, 15.0
     );
 
+    @Override
+    public void pay(double parkingCharge) {
+        System.out.println("Paying: " + parkingCharge);
+    }
 
     @Override
     public double calculateCharge(Vehicle vehicle, long durationInHours) {

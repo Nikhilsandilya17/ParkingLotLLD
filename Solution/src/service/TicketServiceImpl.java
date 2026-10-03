@@ -23,16 +23,16 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public boolean hasActiveTicket(Vehicle vehicle) {
         return ticketRepository.findAll().stream()
-                .anyMatch(ticket -> ticket.getVehicle() == vehicle);
+                .anyMatch(ticket -> ticket.getVehicle().getLicenseNumber().equals(vehicle.getLicenseNumber()));
     }
 
     @Override
     public ParkingTicket closeTicket(String ticketId) {
         ParkingTicket ticket = ticketRepository.findById(ticketId);
-        if (ticket == null) {
-            throw new IllegalArgumentException("Invalid Ticket");
+        if (ticket == null || ticket.isExpired()) {
+            throw new IllegalArgumentException("Invalid Ticket or Closed Ticket");
         }
         ticket.closeTicket();
-        return ticketRepository.remove(ticketId);
+        return ticket;
     }
 }

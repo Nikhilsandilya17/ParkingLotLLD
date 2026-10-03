@@ -1,14 +1,18 @@
 import enums.SpotType;
 import enums.VehicleType;
 import models.*;
+import repository.TicketRepositoryImpl;
 import service.ParkingLotService;
 import service.ParkingLotServiceImpl;
+import strategy.fee.FeeStrategy;
+import strategy.fee.RegularFee;
 
 import java.util.List;
 
 public class ParkingLotDemo {
     public static void main(String[] args) {
-        ParkingLotService parkingLotService = ParkingLotServiceImpl.getInstance();
+        FeeStrategy feeStrategy = new RegularFee();
+        ParkingLotService parkingLotService = new ParkingLotServiceImpl(feeStrategy, TicketRepositoryImpl.getInstance());
 
         System.out.println("---Parking Lot Demo---");
         //1. Create a vehicle
@@ -42,6 +46,8 @@ public class ParkingLotDemo {
         System.out.println("Ticket issued: " + parkingTicket.getId());
 
         parkingLotService.getAvailabilityCountByType(parkingLot);
+
+        parkingLotService.unparkVehicle(parkingTicket.getId());
 
     }
 }

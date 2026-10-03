@@ -7,28 +7,23 @@ import factory.ParkingSpotFactory;
 import factory.VehicleFactory;
 import models.*;
 
+import repository.TicketRepository;
 import repository.TicketRepositoryImpl;
+import strategy.fee.FeeStrategy;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 public class ParkingLotServiceImpl implements ParkingLotService{
     public static volatile ParkingLotService instance;
 
     private final TicketService ticketService;
+    private final FeeStrategy feeStrategy;
 
-    private ParkingLotServiceImpl() {
-        this.ticketService = new TicketServiceImpl(TicketRepositoryImpl.getInstance());
-    }
-
-    public static ParkingLotService getInstance() {
-        if(instance == null){
-            synchronized(ParkingLotServiceImpl.class){
-                if(instance == null){
-                    instance = new ParkingLotServiceImpl();
-                }
-            }
-        }
-        return instance;
+    public ParkingLotServiceImpl(FeeStrategy feeStrategy, TicketRepository ticketRepository) {
+        this.ticketService = new TicketServiceImpl(ticketRepository);
+        this.feeStrategy = feeStrategy;
     }
 
     @Override
@@ -69,6 +64,16 @@ public class ParkingLotServiceImpl implements ParkingLotService{
         Map<VehicleType, Long> availableSpots = parkingLot.getFreeSpotCountByType();
         availableSpots.forEach((type, count) ->
                 System.out.println(type + ": " + count + " spots available"));
+    }
+
+    @Override
+    public void unparkVehicle(String ticketId) {
+        ParkingTicket parkingTicket = ticketService.closeTicket(ticketId);
+        parkingTicket.getParkingSpot().removeVehicle();
+        long durationInHours = Duration.between(parkingTicket.getEntryTime(), parkingTicket.getExitTime()).toHours();
+        double parkingCharge = feeStrategy.calculateCharge(parkingTicket.getVehicle(), durationInHours);
+        feeStrategy.pay(parkingCharge);
+
     }
 
 }

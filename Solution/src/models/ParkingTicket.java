@@ -1,20 +1,26 @@
 package models;
 
-import java.util.UUID;
+import enums.TicketStatus;
+
+import java.time.LocalDateTime;
 
 public class ParkingTicket {
     private final String id;
     private final Vehicle vehicle;
-    private final long entryTime;
-    private long exitTime;
+    private final LocalDateTime entryTime;
+    private LocalDateTime exitTime;
     private final ParkingSpot parkingSpot;
+    private TicketStatus ticketStatus;
 
     public ParkingTicket(String id, Vehicle vehicle, ParkingSpot parkingSpot) {
         this.id = id;
         this.vehicle = vehicle;
-        this.entryTime = System.currentTimeMillis();
+        this.entryTime = LocalDateTime.now();
         this.parkingSpot = parkingSpot;
+        this.exitTime = null;
+        this.ticketStatus = TicketStatus.ACTIVE;
     }
+
 
     public String getId() {
         return id;
@@ -24,11 +30,11 @@ public class ParkingTicket {
         return vehicle;
     }
 
-    public long getEntryTime() {
+    public LocalDateTime getEntryTime() {
         return entryTime;
     }
 
-    public long getExitTime() {
+    public LocalDateTime getExitTime() {
         return exitTime;
     }
 
@@ -37,6 +43,11 @@ public class ParkingTicket {
     }
 
     public void closeTicket() {
-        this.exitTime = System.currentTimeMillis();
+        this.exitTime = LocalDateTime.now().plusHours(2);
+        ticketStatus = TicketStatus.CLOSED;
+    }
+
+    public boolean isExpired(){
+        return ticketStatus == TicketStatus.CLOSED;
     }
 }
