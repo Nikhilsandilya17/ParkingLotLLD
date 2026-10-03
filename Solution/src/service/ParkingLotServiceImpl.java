@@ -6,11 +6,18 @@ import factory.ParkingSpotFactory;
 import factory.VehicleFactory;
 import models.*;
 
-import java.util.List;
+import repository.InMemoryTicketRepository;
+
 import java.util.Map;
 
 public class ParkingLotServiceImpl implements ParkingLotService{
     public static volatile ParkingLotService instance;
+
+    private final TicketService ticketService;
+
+    private ParkingLotServiceImpl() {
+        this.ticketService = new TicketService(new InMemoryTicketRepository());
+    }
 
     public static ParkingLotService getInstance() {
         if(instance == null){
@@ -40,20 +47,19 @@ public class ParkingLotServiceImpl implements ParkingLotService{
 
     @Override
     public ParkingTicket parkVehicle(Vehicle vehicle, ParkingLot parkingLot) {
-        //iterate over all the parking spots floor by floor and whichever is the first empty spot assign that to the vehicle
-        //and issue a parking ticket
-        ParkingSpot parkingSpot = parkingLot.getFloors().stream()
-                .flatMap(floor -> floor.getParkingSpots().stream())
-                .filter(spot -> !spot.isOccupied() && spot.getSpotType().equals(SpotType.CAR))
-                .findFirst().orElse(null);
-        if(parkingSpot == null) {
-            System.out.println("No Parking Spot found");
-            return null;
+        if (ticketService.hasActiveTicket(vehicle)) {
+            throw new IllegalStateException("Vehicle already has an active ticket");
         }
-        parkingSpot.assignVehicle(vehicle);
-        String parkingTicketId = parkingLot.getId() + parkingSpot.getId();
-        ParkingTicket parkingTicket = new ParkingTicket(parkingTicketId, vehicle, parkingSpot);
-
+        for (Floor floor : parkingLot.getFloors()) {
+            for (ParkingSpot spot : floor.getParkingSpots()) {
+                if (spot.getSpotType().name().equals(vehicle.getVehicleType().name())
+                        && spot.tryAssignVehicle(vehicle)) {
+                    String ticketId = parkingLot.getId() + "_" + floor.getFloorNumber() + "_" + spot.getSlotNumber();
+                    return ticketService.issueTicket(ticketId, vehicle, spot);
+                }
+            }
+        }
+        throw new ParkingLotFullException("Parking Lot Full for vehicle type: " + vehicle.getVehicleType());
     }
 
     @Override
@@ -63,6 +69,5 @@ public class ParkingLotServiceImpl implements ParkingLotService{
         availableSpots.forEach((type, count) ->
                 System.out.println(type + ": " + count + " spots available"));
     }
-
 
 }

@@ -14,7 +14,7 @@ public interface ParkingLotService {
 
     boolean isAvailable(ParkingLot parkingLot, Vehicle vehicle);
 
-    ParkingTicket parkVehicle(Vehicle car);
+    ParkingTicket parkVehicle(Vehicle vehicle, ParkingLot parkingLot);
 
     void getAvailabilityCountByType(ParkingLot parkingLot);
 }
