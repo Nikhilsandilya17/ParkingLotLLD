@@ -6,7 +6,7 @@ import factory.ParkingSpotFactory;
 import factory.VehicleFactory;
 import models.*;
 
-import repository.InMemoryTicketRepository;
+import repository.TicketRepositoryImpl;
 
 import java.util.Map;
 
@@ -16,7 +16,7 @@ public class ParkingLotServiceImpl implements ParkingLotService{
     private final TicketService ticketService;
 
     private ParkingLotServiceImpl() {
-        this.ticketService = new TicketService(new InMemoryTicketRepository());
+        this.ticketService = new TicketServiceImpl(TicketRepositoryImpl.getInstance());
     }
 
     public static ParkingLotService getInstance() {
