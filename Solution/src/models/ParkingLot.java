@@ -13,7 +13,7 @@ public class ParkingLot {
     private ParkingLot(ParkingLotBuilder parkingLotBuilder) {
         this.id = parkingLotBuilder.id;
         this.numberOfFloors = parkingLotBuilder.numberOfFloors;
-        this.floors = new ArrayList<>();
+        this.floors = parkingLotBuilder.floors;
     }
 
     public String getId() {
@@ -30,24 +30,20 @@ public class ParkingLot {
 
 
     public void addFloor(Floor floor) {
-        if(floors.size() > numberOfFloors){
+        if(floors.size() >= numberOfFloors){
             throw new IllegalStateException("Cannot add more floors");
         }
         floors.add(floor);
     }
 
-    public void displayAvailability() {
-        System.out.println("Available Parking Lot");
-        Map<VehicleType, Long> availableSpots = floors.stream()
+    public Map<VehicleType, Long> displayAvailability() {
+        return floors.stream()
                 .flatMap(floor -> floor.getParkingSpots().stream())
                 .filter(spot -> !spot.isOccupied())
                 .collect(Collectors.groupingBy(
                         spot -> VehicleType.valueOf(spot.getSpotType().name()),
                         Collectors.counting()
                 ));
-
-        availableSpots.forEach((type, count) ->
-                System.out.println(type + ": " + count + " spots available"));
     }
 
 

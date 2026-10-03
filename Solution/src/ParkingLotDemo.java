@@ -7,7 +7,7 @@ import service.ParkingLotServiceImpl;
 import java.util.List;
 
 public class ParkingLotDemo {
-    static void main() {
+    public static void main(String[] args) {
         ParkingLotService parkingLotService = ParkingLotServiceImpl.getInstance();
 
         System.out.println("---Parking Lot Demo---");
@@ -21,27 +21,24 @@ public class ParkingLotDemo {
         ParkingSpot bikeParkingSpot = parkingLotService.createParkingSpot(SpotType.BIKE);
         ParkingSpot truckParkingSpot = parkingLotService.createParkingSpot(SpotType.TRUCK);
 
+        ParkingSpot carParkingSpot1 = parkingLotService.createParkingSpot(SpotType.CAR);
+        ParkingSpot bikeParkingSpot1 = parkingLotService.createParkingSpot(SpotType.BIKE);
+        ParkingSpot truckParkingSpot1 = parkingLotService.createParkingSpot(SpotType.TRUCK);
+
         Floor floor1 = new Floor("F1");
         Floor floor2 = new Floor("F2");
 
-        floor1.addParkingSpot(List.of(carParkingSpot, bikeParkingSpot, truckParkingSpot, carParkingSpot, bikeParkingSpot, bikeParkingSpot));
-        floor2.addParkingSpot(List.of(carParkingSpot, truckParkingSpot, bikeParkingSpot));
+        floor1.addParkingSpot(List.of(carParkingSpot, bikeParkingSpot, truckParkingSpot));
+        floor2.addParkingSpot(List.of(carParkingSpot1, bikeParkingSpot1, truckParkingSpot1));
 
         ParkingLot parkingLot = new ParkingLot.ParkingLotBuilder(2)
                 .parkingFloors(List.of(floor1, floor2))
                 .build();
 
         //3. Simulate vehicle entries
-        parkingLot.displayAvailability();
+        parkingLotService.getAvailabilityCountByType(parkingLot);
 
 //        ParkingTicket parkingTicket = parkingLotService.parkVehicle(car);
-
-
-
-
-
-
-
 
     }
 }

@@ -6,7 +6,7 @@ import factory.ParkingSpotFactory;
 import factory.VehicleFactory;
 import models.*;
 
-import java.util.List;
+import java.util.Map;
 
 public class ParkingLotServiceImpl implements ParkingLotService{
     public static volatile ParkingLotService instance;
@@ -36,12 +36,20 @@ public class ParkingLotServiceImpl implements ParkingLotService{
     public boolean isAvailable(ParkingLot parkingLot, Vehicle vehicle) {
         return parkingLot.getFloors().stream()
                 .flatMap(floor -> floor.getParkingSpots().stream())
-                .anyMatch(parkingSpot -> parkingSpot.getSpotType().name().equals(vehicle.getVehicleType().name()));
+                .anyMatch(parkingSpot -> parkingSpot.getSpotType().name().equals(vehicle.getVehicleType().name()) && !parkingSpot.isOccupied());
     }
 
     @Override
     public ParkingTicket parkVehicle(Vehicle car) {
         return null;
+    }
+
+    @Override
+    public void getAvailabilityCountByType(ParkingLot parkingLot) {
+        System.out.println("Available Parking Lot");
+        Map<VehicleType, Long> availableSpots = parkingLot.displayAvailability();
+        availableSpots.forEach((type, count) ->
+                System.out.println(type + ": " + count + " spots available"));
     }
 
 
