@@ -36,7 +36,7 @@ public class ParkingTicket {
         return parkingSpot;
     }
 
-    public void setExitTime() {
+    public void closeTicket() {
         this.exitTime = System.currentTimeMillis();
     }
 }

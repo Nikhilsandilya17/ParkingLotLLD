@@ -27,7 +27,15 @@ public class ParkingSpot {
         return isOccupied;
     }
 
-    public void setOccupied(boolean occupied) {
-        this.isOccupied = occupied;
+    public boolean assignVehicle() {
+        if (isOccupied) {
+            return false;
+        }
+        this.isOccupied = true;
+        return true;
+    }
+
+    public void removeVehicle() {
+        this.isOccupied = false;
     }
 }

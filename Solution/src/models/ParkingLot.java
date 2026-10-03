@@ -36,7 +36,13 @@ public class ParkingLot {
         floors.add(floor);
     }
 
-    public Map<VehicleType, Long> displayAvailability() {
+    public boolean isAvailableFor(VehicleType type) {
+        return floors.stream()
+                .flatMap(floor -> floor.getParkingSpots().stream())
+                .anyMatch(spot -> spot.getSpotType().name().equals(type.name()) && !spot.isOccupied());
+    }
+
+    public Map<VehicleType, Long> getFreeSpotCountByType() {
         return floors.stream()
                 .flatMap(floor -> floor.getParkingSpots().stream())
                 .filter(spot -> !spot.isOccupied())
@@ -55,10 +61,11 @@ public class ParkingLot {
         public ParkingLotBuilder(int numberOfFloors){
             this.id = UUID.randomUUID().toString();
             this.numberOfFloors = numberOfFloors;
+            this.floors = new ArrayList<>();
         }
 
         public ParkingLotBuilder parkingFloors(List<Floor> floors){
-            this.floors = floors;
+            this.floors = new ArrayList<>(floors);
             return this;
         }
 

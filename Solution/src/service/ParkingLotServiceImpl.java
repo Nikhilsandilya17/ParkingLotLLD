@@ -34,9 +34,7 @@ public class ParkingLotServiceImpl implements ParkingLotService{
 
     @Override
     public boolean isAvailable(ParkingLot parkingLot, Vehicle vehicle) {
-        return parkingLot.getFloors().stream()
-                .flatMap(floor -> floor.getParkingSpots().stream())
-                .anyMatch(parkingSpot -> parkingSpot.getSpotType().name().equals(vehicle.getVehicleType().name()) && !parkingSpot.isOccupied());
+        return parkingLot.isAvailableFor(vehicle.getVehicleType());
     }
 
     @Override
@@ -47,7 +45,7 @@ public class ParkingLotServiceImpl implements ParkingLotService{
     @Override
     public void getAvailabilityCountByType(ParkingLot parkingLot) {
         System.out.println("Available Parking Lot");
-        Map<VehicleType, Long> availableSpots = parkingLot.displayAvailability();
+        Map<VehicleType, Long> availableSpots = parkingLot.getFreeSpotCountByType();
         availableSpots.forEach((type, count) ->
                 System.out.println(type + ": " + count + " spots available"));
     }
