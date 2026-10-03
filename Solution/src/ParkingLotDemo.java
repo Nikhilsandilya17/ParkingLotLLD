@@ -38,7 +38,7 @@ public class ParkingLotDemo {
         //3. Simulate vehicle entries
         parkingLotService.getAvailabilityCountByType(parkingLot);
 
-//        ParkingTicket parkingTicket = parkingLotService.parkVehicle(car);
+        ParkingTicket parkingTicket = parkingLotService.parkVehicle(car);
 
     }
 }

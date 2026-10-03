@@ -9,8 +9,8 @@ public class ParkingTicket {
     private long exitTime;
     private final ParkingSpot parkingSpot;
 
-    public ParkingTicket(Vehicle vehicle, ParkingSpot parkingSpot) {
-        this.id = UUID.randomUUID().toString();
+    public ParkingTicket(String id, Vehicle vehicle, ParkingSpot parkingSpot) {
+        this.id = id;
         this.vehicle = vehicle;
         this.entryTime = System.currentTimeMillis();
         this.parkingSpot = parkingSpot;

@@ -27,7 +27,7 @@ public class ParkingSpot {
         return isOccupied;
     }
 
-    public boolean assignVehicle() {
+    public boolean assignVehicle(Vehicle vehicle) {
         if (isOccupied) {
             return false;
         }

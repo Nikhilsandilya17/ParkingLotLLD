@@ -6,6 +6,7 @@ import factory.ParkingSpotFactory;
 import factory.VehicleFactory;
 import models.*;
 
+import java.util.List;
 import java.util.Map;
 
 public class ParkingLotServiceImpl implements ParkingLotService{
@@ -38,8 +39,21 @@ public class ParkingLotServiceImpl implements ParkingLotService{
     }
 
     @Override
-    public ParkingTicket parkVehicle(Vehicle car) {
-        return null;
+    public ParkingTicket parkVehicle(Vehicle vehicle, ParkingLot parkingLot) {
+        //iterate over all the parking spots floor by floor and whichever is the first empty spot assign that to the vehicle
+        //and issue a parking ticket
+        ParkingSpot parkingSpot = parkingLot.getFloors().stream()
+                .flatMap(floor -> floor.getParkingSpots().stream())
+                .filter(spot -> !spot.isOccupied() && spot.getSpotType().equals(SpotType.CAR))
+                .findFirst().orElse(null);
+        if(parkingSpot == null) {
+            System.out.println("No Parking Spot found");
+            return null;
+        }
+        parkingSpot.assignVehicle(vehicle);
+        String parkingTicketId = parkingLot.getId() + parkingSpot.getId();
+        ParkingTicket parkingTicket = new ParkingTicket(parkingTicketId, vehicle, parkingSpot);
+
     }
 
     @Override
