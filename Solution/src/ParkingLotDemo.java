@@ -25,8 +25,8 @@ public class ParkingLotDemo {
         ParkingSpot bikeParkingSpot1 = parkingLotService.createParkingSpot(SpotType.BIKE);
         ParkingSpot truckParkingSpot1 = parkingLotService.createParkingSpot(SpotType.TRUCK);
 
-        Floor floor1 = new Floor("F1");
-        Floor floor2 = new Floor("F2");
+        Floor floor1 = new Floor(1);
+        Floor floor2 = new Floor(2);
 
         floor1.addParkingSpot(List.of(carParkingSpot, bikeParkingSpot, truckParkingSpot));
         floor2.addParkingSpot(List.of(carParkingSpot1, bikeParkingSpot1, truckParkingSpot1));
@@ -38,7 +38,10 @@ public class ParkingLotDemo {
         //3. Simulate vehicle entries
         parkingLotService.getAvailabilityCountByType(parkingLot);
 
-        ParkingTicket parkingTicket = parkingLotService.parkVehicle(car);
+        ParkingTicket parkingTicket = parkingLotService.parkVehicle(car, parkingLot);
+        System.out.println("Ticket issued: " + parkingTicket.getId());
+
+        parkingLotService.getAvailabilityCountByType(parkingLot);
 
     }
 }
